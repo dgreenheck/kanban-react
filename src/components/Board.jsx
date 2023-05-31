@@ -1,8 +1,70 @@
-import { useState } from "react";
-import BoardColumn from "./BoardColumn";
+import List from "./List";
+import api from '../services/api';
+import { useEffect, useState } from 'react';
+import AddListButton from './AddListButton';
 
-export default function Board(board) {
-  const [cards, setCards] = useState(board.cards);
+export default function Board() {
+  let [focusedCard, setFocusedCard] = useState(null);
+  let [lists, setLists] = useState([]);
+  let [cards, setCards] = useState({});
+
+  useEffect(() => {
+    api.getLists()
+      .then(lists => {
+        setLists(lists);
+      });
+    
+    api.getCards()
+      .then(cards => {
+        setCards(cards);
+      })
+  },[]);
+
+  return (
+    <>
+      <div className='board-header'>
+        <h1 className='board-name'>My Board</h1>
+      </div>
+      <div className='board'>
+        {lists.map((list) => {
+          return (
+            <List
+              key={list}
+              list={list}
+              cards={cards}
+              focusedCard={focusedCard}
+              onAddCardToListClicked={createCard}
+              onCardDragEnded={cardDragEnded}
+            />
+          );
+        })}
+        <AddListButton/>
+      </div>
+    </>
+  );
+
+  /**
+   * Creates a new card
+   * @param {string} list The name of the list to add the card to
+   */
+  function createCard(list) {
+    const card = {
+      id: Math.floor(32768 * Math.random()),
+      description: '',
+      list,
+      order: 0
+    }
+
+    // TODO: Make API call
+    console.log('Created new card');
+    console.log(card);
+
+    setFocusedCard(card);
+
+    // Update state
+    const newCards = [...cards, card];
+    setCards(newCards);
+  }
 
   function cardDragEnded(cardId, event) {
     // Get the element the card was dropped on
@@ -23,19 +85,4 @@ export default function Board(board) {
       setCards(clonedCards);
     }
   }
-
-  return (
-    <div className="board">
-      {board.columns.map((column) => {
-        return (
-          <BoardColumn
-            key={column.id}
-            column={column}
-            cards={cards.filter(card => card.state === column.id)}
-            onCardDragEnded={cardDragEnded}
-          />
-        );
-      })}
-    </div>
-  );
 }

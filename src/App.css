@@ -1,57 +1,179 @@
+body {
+  overflow: hidden;
+  background: url('../public/mountains.jpg');
+  padding: 0;
+  margin: 0;
+  height: 100dvh;
+}
+
+.app {
+  height: 100dvh;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
 .board {
-  background: #33353a;
+  overflow: scroll;
+  padding: 8px;
+
+  /* Force board to fill height of screen */
+  flex: 1 1 auto;
 
   /* Column layout */
   display: flex;
   flex-direction: row;
+  align-items: start;
 }
 
-.column {
-  height: 100vh;
+.board-name {
+  color: white;
+  font-size: larger;
+  margin: 0;
+  margin-left: 16px;
+}
+
+.board-header {
+  width: 100%;
+  background:linear-gradient(180deg, #223563, rgb(39, 49, 72));
   padding: 16px;
-  flex: 1 1 0;
-
-  /* Card layout */
-  display: flex;
-  flex-direction: column;
 }
 
-.column-header {
-  background-color: #222222;
-  padding: 24px;
+.button-primary {
+  background-color: #0279C0;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0px 1px 1px #00000044;
+  color: white;
+  cursor: pointer;
+  height: 32px;
+  padding: 8px;
+  margin-right: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
 
-  border-radius: 16px;
-  box-shadow: 0px 0px 20px #272727;
+.button-primary:hover {
+  background-color: #036aa7;
+}
 
-  /* Text settings */
-  font-size: x-large;
-  color: lightgray;
-  text-align: center;
-  white-space: nowrap;
+.button-cancel {
+  background-color: lightgray;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0px 1px 1px #00000044;
+  color: rgb(33, 33, 33);
+  cursor: pointer;
+  height: 32px;
+  margin-right: 4px;
+  padding: 8px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.button-cancel:hover {
+  background-color: rgb(227, 227, 227);
 }
 
 .card {
-  background-color: #222222;
-  margin-top: 16px;
+  background-color: #464e62c6;
   border-radius: 8px;
-  box-shadow: 0px 0px 20px #272727;
-  transition: transform 1s ease-in-out;
+  box-shadow: 0px 2px 1px #000000A0;
+  font-size: medium;
+  font-weight: 500px;
+  color: rgb(238, 238, 238);
+  margin-bottom: 8px;
+  padding: 12px;
+
+  transition: background-color 0.3s ease;
 }
 
-.card-header {
-  margin: 0;
-  color: white;
-  font-size: large;
-  
-  border-radius: 8px 8px 0 0;
-  text-align: center;
-  padding: 4px;
+.card:hover {
+  background-color: #626876c6;
 }
 
-.card-body {
-  font-size: small;
-  color: lightgray;
+.card textarea {
+  border: solid 1px #d3d3d3;
+  box-sizing: border-box;
+  display: block;
+  height: 32px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 300;
+  margin-bottom: 8px;
+  padding: 8px;
+  resize: none;
+  width: 100%;
+}
 
-  margin: 0px;
+.list {
+  background-color: #4a597b60;
+  border-radius: 16px;
+  box-shadow: 0px 2px 1px #00000070;
+  width: 272px;
+  margin: 4px;
+  padding: 12px;
+
+  /* Card layout */
+  display: flex;
+  flex: none;
+  flex-basis: 272px;
+  flex-direction: column;
+}
+
+.list-header {
+  color: #ffffff;
+  font-size: medium;
+  font-weight: 600;
+  margin-top: 8px;
+  margin-left: 12px;
+  margin-bottom: 16px;
+}
+
+#add-list-wrapper {
   padding: 16px;
+  margin: 4px;
+  width: 272px;
+
+  background-color: #5e88bd;
+  border-radius: 16px;
+  box-shadow: 0px 2px 5px #00000044;
+  color: rgba(255, 255, 255, 0.884);
+  cursor: pointer;
+
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: start;
+}
+
+#add-list-wrapper.editing {
+  background-color: #EFECF0;
+  height: 78px;
+  padding: 16px;
+  display: block;
+}
+
+#add-list-wrapper.editing input {
+  display: block;
+  height: 32px;
+  padding-left: 4px;
+  font-weight: 300;
+  margin-bottom: 8px;
+  width: 260px;
+}
+
+#add-card-button {
+  background: none;
+  border: none;
+  color: rgb(29, 29, 29);
+  text-align: left;
+  font-size: medium;
+  margin-left: 4px;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#add-card-button:hover {
+  color: rgb(235, 235, 235);
 }

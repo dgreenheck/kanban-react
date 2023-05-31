@@ -1,61 +1,28 @@
 {
-  "columns": [
-    {
-      "id": "new",
-      "label": "New"
-    },
-    {
-      "id": "planning",
-      "label": "Planning"
-    },
-    {
-      "id": "inProgress",
-      "label": "In Progress"
-    },
-    {
-      "id": "completed",
-      "label": "Completed"
-    }
-  ],
+  "lists": ["To Do", "In Progress", "Completed"],
   "cards": [
     {
       "id": 1,
-      "title": "Card 1",
       "description": "This is the card description. Here is some text",
-      "state": "new",
-      "color": "#880000",
+      "list": "To Do",
       "order": 0
     },
     {
       "id": 2,
-      "title": "Card 2",
       "description": "This is the card description. Here is some text",
-      "state": "new",
-      "color": "#008800",
-      "order": 0
-    },
-    {
-      "id": 3,
-      "title": "Card 3",
-      "description": "This is the card description. Here is some text",
-      "state": "planning",
-      "color": "#000088",
+      "list": "To Do",
       "order": 0
     },
     {
       "id": 4,
-      "title": "Card 4",
       "description": "This is the card description. Here is some text",
-      "state": "inProgress",
-      "color": "#880000",
+      "list": "In Progress",
       "order": 0
     },
     {
       "id": 5,
-      "title": "Card 5",
       "description": "This is the card description. Here is some text",
-      "state": "completed",
-      "color": "#008800",
+      "list": "Completed",
       "order": 0
     }
   ]
