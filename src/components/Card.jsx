@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import api from '../services/api.js';
 
-export default function Card({ card, initialEditState, onDragEnter, onDragEnd }) {
+/**
+ * Creates a new Card component
+ * @param {{
+ *  card: object,
+ *  initialEditState: boolean
+ * }} param0 
+ * @returns 
+ */
+export default function Card({ card, initialEditState, onDrag, onDragStart, onDragEnd }) {
   let [isEditing, setIsEditing] = useState(initialEditState);
 
   return (isEditing ? editableCard() : readOnlyCard());
@@ -19,9 +27,8 @@ export default function Card({ card, initialEditState, onDragEnter, onDragEnd })
         id={card.id}
         className="card"
         draggable
+        onDragStart={dragStart}
         onClick={() => setIsEditing(!isEditing)}
-        onDragEnter={() => onDragEnter(card)}
-        onDragEnd={() => onDragEnd(card)}
       >
         <span>{card.description}</span>
       </div>
@@ -47,6 +54,11 @@ export default function Card({ card, initialEditState, onDragEnter, onDragEnd })
         </button>
       </div>
     );
+  }
+
+  function dragStart(event) {
+    // Store the card data in the dataTransfer property of the drag event
+    event.dataTransfer.setData('cardId', card.id);
   }
 
   /**

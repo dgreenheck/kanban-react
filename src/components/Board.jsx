@@ -33,12 +33,13 @@ export default function Board() {
               list={list}
               cards={cards}
               focusedCard={focusedCard}
-              onAddCardToListClicked={createCard}
-              onCardDragEnded={cardDragEnded}
+              onCardCreated={createCard}
+              onCardMoved={moveCard}
+              onListDeleted={deleteList}
             />
           );
         })}
-        <AddListButton/>
+        <AddListButton onAddList={createList}/>
       </div>
     </>
   );
@@ -66,23 +67,64 @@ export default function Board() {
     setCards(newCards);
   }
 
-  function cardDragEnded(cardId, event) {
-    // Get the element the card was dropped on
-    const targetElement = document.elementFromPoint(event.clientX, event.clientY);
+  /**
+   * Creates a new list
+   * @param {string} list 
+   */
+  function createList(list) {
+    // TODO: Make API call
+    console.log('Created new list');
+    console.log(list);
 
-    // Did we drop on a column?
-    if (!targetElement.classList.contains('column')) {
-      return;
-    }
+    // Update state
+    const newLists = [...lists, list];
+    setLists(newLists);
+  }
 
-    // Did the state of the card change?
-    const oldCardState = cards.find(x => x.id === cardId).state;
-    const newCardState = targetElement.id;
-    if (oldCardState !== newCardState) {
-      let clonedCards = cards.slice();
-      const card = clonedCards.find(x => x.id === cardId);
-      card.state = newCardState;
-      setCards(clonedCards);
-    }
+  /**
+   * Moves a card to the target list
+   * @param {object} id ID of the moved card 
+   * @param {string} targetList The name of the list the card was moved to
+   * @param {number} dragIndex The position of the card in the list
+   */
+  function moveCard(id, targetList, dragIndex) {
+    let updatedCards = [...cards];
+
+    console.log(`Moving card ${id} to list ${targetList} at position ${dragIndex}`);
+
+    // Find the other cards in the list and update their positions
+    updatedCards
+      .filter(card => card.id !== id)
+      .filter(card => card.list === targetList)
+      .forEach(card => {
+        if (card.position >= dragIndex) {
+          card.position += 1;
+        }
+      })
+
+    // Move the card to the target list and update its posiiton
+    const movedCard = cards.find(card => card.id === id);
+    movedCard.list = targetList;
+    movedCard.position = dragIndex;
+
+    console.log(updatedCards);
+
+    // MAKE API CALL
+
+    setCards(updatedCards);
+  }
+
+  /**
+   * Deletes a list
+   * @param {*} list 
+   */
+  function deleteList(listToDelete) {
+    // TODO: Make API call
+    console.log('Deleted list');
+    console.log(listToDelete);
+
+    // Update state
+    const newLists = lists.filter(list => list !== listToDelete);
+    setLists(newLists);
   }
 }
