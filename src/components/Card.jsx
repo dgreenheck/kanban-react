@@ -37,7 +37,7 @@ export default function Card({ card, initialEditState, isBeingDragged }) {
         onDragEnd={() => setIsDragging(false)}
         onClick={() => setIsEditing(!isEditing)}
       >
-        <span>{card.description}</span>
+        <span className='card-description'>{card.description}</span>
       </div>
     );
   }
@@ -63,9 +63,13 @@ export default function Card({ card, initialEditState, isBeingDragged }) {
     );
   }
 
-  function dragStart(event) {
+  /**
+   * The user has started to drag this card
+   * @param {DragEvent} e 
+   */
+  function dragStart(e) {
     // Store the card data in the dataTransfer property of the drag event
-    event.dataTransfer.setData('cardId', card.id);
+    e.dataTransfer.setData('cardId', card.id);
     setIsDragging(true);
   }
 
@@ -76,6 +80,5 @@ export default function Card({ card, initialEditState, isBeingDragged }) {
     const textArea = document.getElementById(`card-${card.id}-textarea`);
     textArea.style.height = '';
     textArea.style.height = `${textArea.scrollHeight + 3}px`;
-    console.log(textArea.scrollHeight);
   }
 }

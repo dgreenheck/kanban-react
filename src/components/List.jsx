@@ -63,9 +63,7 @@ export default function List({
     ));
 
     if (dragData) {
-      console.log(dragData)
       const draggedCard = cards.find(card => card.id === dragData.cardId);
-      console.log(draggedCard);
       listCards.splice(dragData.position, 0, (
         <Card
           key={-1}
@@ -81,33 +79,33 @@ export default function List({
 
   /**
    *
-   * @param {DragEvent} event
+   * @param {DragEvent} e Drag event data
    */
-  function dragOver(event) {
+  function dragOver(e) {
     setDragData({
-      cardId: Number(event.dataTransfer.getData('cardId')),
-      position: calculateDragIndex(event)
+      cardId: Number(e.dataTransfer.getData('cardId')),
+      position: calculateDragIndex(e)
     });
   }
 
-    /**
-   *
-   * @param {DragEvent} event
+  /**
+   * A card was dropped on this list
+   * @param {DragEvent} e Drag event data
    */
-  function cardDropped(event) {
-    const cardId = Number(event.dataTransfer.getData('cardId'));
-    onCardMoved(cardId, list, calculateDragIndex(event));
+  function cardDropped(e) {
+    const cardId = Number(e.dataTransfer.getData('cardId'));
+    onCardMoved(cardId, list, calculateDragIndex(e));
     setDragData(null);
   }
 
-  function calculateDragIndex(event) {
+  function calculateDragIndex(e) {
     // Get the DOM elements of the cards in this list
     const listElement = document.getElementById(`list-${list}`);
     let listCards = [...listElement.children].filter((card) =>
       card.classList.contains("card")
     );
 
-    const dragY = event.pageY;
+    const dragY = e.pageY;
     for (let i = 0; i < listCards.length; i++) {
       const cardY = listCards[i].offsetTop + listCards[i].scrollHeight / 2;
       if (dragY < cardY) {

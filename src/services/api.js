@@ -1,6 +1,11 @@
 import data from './data.json';
 
 const api = {
+  authenticate(username, password) {
+    console.log(`${username} ${password}`);
+    // TODO: Authenticate against API
+    return (username === 'bob' && password === 'ape')
+  },
   getLists: async function() {
     console.log('getLists');
     console.log(data.lists);

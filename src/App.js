@@ -1,11 +1,17 @@
+import { useState } from 'react';
 import './App.css';
 import Board from './components/Board';
-import api from './services/api';
+import LoginScreen from './components/Login';
 
 function App() {
+  let [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
     <div className="app">
-      <Board/>
+      {isAuthenticated ?
+        <Board/> :
+        <LoginScreen onSuccessfulLogin={() => setIsAuthenticated(true)}/>
+      }
     </div>
   );
 }

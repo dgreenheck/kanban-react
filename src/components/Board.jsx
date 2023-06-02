@@ -85,30 +85,45 @@ export default function Board() {
    * Moves a card to the target list
    * @param {object} id ID of the moved card 
    * @param {string} targetList The name of the list the card was moved to
-   * @param {number} dragIndex The position of the card in the list
+   * @param {number} targetPosition The position of the card in the list
    */
-  function moveCard(id, targetList, dragIndex) {
+  function moveCard(id, targetList, targetPosition) {
     let updatedCards = [...cards];
 
-    console.log(`Moving card ${id} to list ${targetList} at position ${dragIndex}`);
+    // Move the card to the target list and update its posiiton
+    const movedCard = cards.find(card => card.id === id);
 
-    // Find the other cards in the list and update their positions
+    // Update the positions of the cards in the source list
+    updatedCards
+      .filter(card => card.id !== id)
+      .filter(card => card.list === movedCard.list)
+      .forEach(card => {
+        // All cards after the moved card need to have their
+        // position decremented by 1
+        if (card.position > movedCard.position) {
+          card.position -= 1;
+        }
+      })
+
+    // Update the positions of the cards in the target list
     updatedCards
       .filter(card => card.id !== id)
       .filter(card => card.list === targetList)
       .forEach(card => {
-        if (card.position >= dragIndex) {
+        // All cards after the moved card need to have their
+        // position incremented by 1
+        if (card.position >= targetPosition) {
           card.position += 1;
         }
       })
 
-    // Move the card to the target list and update its posiiton
-    const movedCard = cards.find(card => card.id === id);
+    // Finally, update list and position for the moved card
     movedCard.list = targetList;
-    movedCard.position = dragIndex;
+    movedCard.position = targetPosition;
 
-    console.log(updatedCards);
-
+    for (const card of cards) {
+      console.log(`${card.id} ${card.description} (${card.position})`);
+    }
     // MAKE API CALL
 
     setCards(updatedCards);
