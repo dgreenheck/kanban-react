@@ -9,10 +9,15 @@ import api from '../services/api.js';
  * }} param0 
  * @returns 
  */
-export default function Card({ card, initialEditState, onDrag, onDragStart, onDragEnd }) {
+export default function Card({ card, initialEditState, isBeingDragged }) {
   let [isEditing, setIsEditing] = useState(initialEditState);
+  let [isDragging, setIsDragging] = useState(false);
 
-  return (isEditing ? editableCard() : readOnlyCard());
+  if (isEditing) {
+    return editableCard();
+  } else {
+    return readOnlyCard()
+  }
 
   function saveCard() {
     const descriptionElement = document.getElementById(`card-${card.id}-textarea`);
@@ -24,10 +29,12 @@ export default function Card({ card, initialEditState, onDrag, onDragStart, onDr
   function readOnlyCard() {
     return (
       <div
-        id={card.id}
-        className="card"
+        id={`card-${card.id}`}
+        className={isBeingDragged ? 'card dragging' : 'card'}
+        style={isDragging ? { display: 'none' } : {}}
         draggable
         onDragStart={dragStart}
+        onDragEnd={() => setIsDragging(false)}
         onClick={() => setIsEditing(!isEditing)}
       >
         <span>{card.description}</span>
@@ -37,7 +44,7 @@ export default function Card({ card, initialEditState, onDrag, onDragStart, onDr
   
   function editableCard() {
     return (
-      <div id={card.id} className="card editing">
+      <div id={`card-${card.id}`} className="card editing">
         <textarea 
           id={`card-${card.id}-textarea`} 
           autoFocus={true}
@@ -59,6 +66,7 @@ export default function Card({ card, initialEditState, onDrag, onDragStart, onDr
   function dragStart(event) {
     // Store the card data in the dataTransfer property of the drag event
     event.dataTransfer.setData('cardId', card.id);
+    setIsDragging(true);
   }
 
   /**

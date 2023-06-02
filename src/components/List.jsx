@@ -20,7 +20,7 @@ export default function List({
   onCardMoved,
   onListDeleted,
 }) {
-  const [dragIndex, setDragIndex] = useState(null);
+  const [dragData, setDragData] = useState(null);
 
   return (
     <div
@@ -28,7 +28,7 @@ export default function List({
       className="list"
       onDragOver={dragOver}
       onDrop={cardDropped}
-      onDragLeave={() => setDragIndex(null)}
+      onDragLeave={() => setDragData(null)}
     >
       <div className="list-header">
         <h1 className="list-title">{list}</h1>
@@ -46,8 +46,11 @@ export default function List({
   function listCards(cards) {
     // Get the cards in this list (sorted by position)
     let listCards = cards
-      .filter((card) => card.list === list)
-      .sort((a, b) => a.position < b.position);
+    .filter((card) => {
+      return (card.list === list)
+    });
+
+    listCards.sort((a, b) => a.position > b.position);
 
     listCards = listCards.map((card) => (
       <Card
@@ -59,11 +62,18 @@ export default function List({
       />
     ));
 
-    if (dragIndex !== null) {
-      const placeholder = (
-        <div key="placeholder" className="card-placeholder"></div>
-      );
-      listCards.splice(dragIndex, 0, placeholder);
+    if (dragData) {
+      console.log(dragData)
+      const draggedCard = cards.find(card => card.id === dragData.cardId);
+      console.log(draggedCard);
+      listCards.splice(dragData.position, 0, (
+        <Card
+          key={-1}
+          card={draggedCard}
+          initialEditState={false}
+          isBeingDragged={true}
+        />
+      ));
     }
 
     return listCards;
@@ -74,7 +84,10 @@ export default function List({
    * @param {DragEvent} event
    */
   function dragOver(event) {
-    setDragIndex(calculateDragIndex(event));
+    setDragData({
+      cardId: Number(event.dataTransfer.getData('cardId')),
+      position: calculateDragIndex(event)
+    });
   }
 
     /**
@@ -84,7 +97,7 @@ export default function List({
   function cardDropped(event) {
     const cardId = Number(event.dataTransfer.getData('cardId'));
     onCardMoved(cardId, list, calculateDragIndex(event));
-    setDragIndex(null);
+    setDragData(null);
   }
 
   function calculateDragIndex(event) {
