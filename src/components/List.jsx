@@ -20,11 +20,43 @@ export default function List({
   onCardMoved,
   onListDeleted,
 }) {
+  const listId = `list-${list}`;
   const [dragData, setDragData] = useState(null);
+
+  // Get the cards in this list (sorted by position)
+  let listCards = cards
+    .filter((card) => {
+      return card.list === list;
+    })
+    .sort((a, b) => a.position > b.position)
+    .map((card) => (
+      <Card
+        key={card.id}
+        card={card}
+        // If this card is the currently focused card, start it in
+        // an editable state
+        isNew={card.id === focusedCard?.id}
+      />
+    ));
+
+  // If a card is being dragged, show its silhoutte
+  if (dragData) {
+    const draggedCard = cards.find((card) => card.id === dragData.cardId);
+    listCards.splice(
+      dragData.position,
+      0,
+      <Card
+        key={-1}
+        card={draggedCard}
+        isNew={false}
+        isBeingDragged={true}
+      />
+    );
+  }
 
   return (
     <div
-      id={`list-${list}`}
+      id={listId}
       className="list"
       onDragOver={dragOver}
       onDrop={cardDropped}
@@ -36,46 +68,12 @@ export default function List({
           <img className="icon" src="images/trash.png" alt="delete"></img>
         </button>
       </div>
-      {listCards(cards)}
+      {listCards}
       <button id="add-card-button" onClick={() => onCardCreated(list)}>
         + Add card to list
       </button>
     </div>
   );
-
-  function listCards(cards) {
-    // Get the cards in this list (sorted by position)
-    let listCards = cards
-    .filter((card) => {
-      return (card.list === list)
-    });
-
-    listCards.sort((a, b) => a.position > b.position);
-
-    listCards = listCards.map((card) => (
-      <Card
-        key={card.id}
-        card={card}
-        // If this card is the currently focused card, start it in
-        // an editable state
-        initialEditState={card.id === focusedCard?.id}
-      />
-    ));
-
-    if (dragData) {
-      const draggedCard = cards.find(card => card.id === dragData.cardId);
-      listCards.splice(dragData.position, 0, (
-        <Card
-          key={-1}
-          card={draggedCard}
-          initialEditState={false}
-          isBeingDragged={true}
-        />
-      ));
-    }
-
-    return listCards;
-  }
 
   /**
    *
@@ -83,8 +81,8 @@ export default function List({
    */
   function dragOver(e) {
     setDragData({
-      cardId: Number(e.dataTransfer.getData('cardId')),
-      position: calculateDragIndex(e)
+      cardId: Number(e.dataTransfer.getData("cardId")),
+      position: calculateListPosition(e),
     });
   }
 
@@ -93,14 +91,20 @@ export default function List({
    * @param {DragEvent} e Drag event data
    */
   function cardDropped(e) {
-    const cardId = Number(e.dataTransfer.getData('cardId'));
-    onCardMoved(cardId, list, calculateDragIndex(e));
+    const cardId = Number(e.dataTransfer.getData("cardId"));
+    onCardMoved(cardId, list, calculateListPosition(e));
     setDragData(null);
   }
 
-  function calculateDragIndex(e) {
+  /**
+   * Calculate the position in the list the mouse is currently
+   * hovering over
+   * @param {DragEvent} e 
+   * @returns 
+   */
+  function calculateListPosition(e) {
     // Get the DOM elements of the cards in this list
-    const listElement = document.getElementById(`list-${list}`);
+    const listElement = document.getElementById(listId);
     let listCards = [...listElement.children].filter((card) =>
       card.classList.contains("card")
     );

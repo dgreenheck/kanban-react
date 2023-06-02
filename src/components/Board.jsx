@@ -127,6 +127,7 @@ export default function Board() {
     // MAKE API CALL
 
     setCards(updatedCards);
+    setFocusedCard(null);
   }
 
   /**

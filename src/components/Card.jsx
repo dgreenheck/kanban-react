@@ -1,84 +1,55 @@
-import { useState } from 'react';
-import api from '../services/api.js';
+import { useState } from "react";
+import api from "../services/api.js";
+import EditableCard from "./EditableCard.jsx";
 
 /**
  * Creates a new Card component
  * @param {{
  *  card: object,
- *  initialEditState: boolean
- * }} param0 
- * @returns 
+ *  isNew: boolean
+ * }} param0
+ * @returns
  */
-export default function Card({ card, initialEditState, isBeingDragged }) {
-  let [isEditing, setIsEditing] = useState(initialEditState);
+export default function Card({ card, isNew, isBeingDragged }) {
+  let [isEditing, setIsEditing] = useState(isNew);
   let [isDragging, setIsDragging] = useState(false);
 
-  if (isEditing) {
-    return editableCard();
-  } else {
-    return readOnlyCard()
-  }
+  return isEditing ? (
+    <EditableCard
+      card={card}
+      onSave={save}
+      onCancel={() => setIsEditing(false)}
+    ></EditableCard>
+  ) : (
+    <div
+      id={`card-${card.id}`}
+      className={isBeingDragged ? "card dragging" : "card"}
+      style={isDragging ? { display: "none" } : {}}
+      draggable
+      onDragStart={dragStart}
+      onDragEnd={() => setIsDragging(false)}
+      onClick={() => setIsEditing(!isEditing)}
+    >
+      <span className="card-description">{card.description}</span>
+    </div>
+  );
 
-  function saveCard() {
-    const descriptionElement = document.getElementById(`card-${card.id}-textarea`);
-    card.description = descriptionElement.value; 
+  function save() {
+    const descriptionElement = document.getElementById(
+      `card-${card.id}-textarea`
+    );
+    card.description = descriptionElement.value;
     api.updateCard(card);
     setIsEditing(false);
   }
 
-  function readOnlyCard() {
-    return (
-      <div
-        id={`card-${card.id}`}
-        className={isBeingDragged ? 'card dragging' : 'card'}
-        style={isDragging ? { display: 'none' } : {}}
-        draggable
-        onDragStart={dragStart}
-        onDragEnd={() => setIsDragging(false)}
-        onClick={() => setIsEditing(!isEditing)}
-      >
-        <span className='card-description'>{card.description}</span>
-      </div>
-    );
-  }
-  
-  function editableCard() {
-    return (
-      <div id={`card-${card.id}`} className="card editing">
-        <textarea 
-          id={`card-${card.id}-textarea`} 
-          autoFocus={true}
-          onFocus={resizeTextArea}
-          onInput={resizeTextArea}
-          defaultValue={card.description}
-        >
-        </textarea>
-        <button className="button-primary" onClick={() => saveCard(card)}>
-          Save
-        </button>
-        <button className="button-cancel" onClick={() => setIsEditing(!isEditing)}>
-          Cancel
-        </button>
-      </div>
-    );
-  }
-
   /**
    * The user has started to drag this card
-   * @param {DragEvent} e 
+   * @param {DragEvent} e
    */
   function dragStart(e) {
     // Store the card data in the dataTransfer property of the drag event
-    e.dataTransfer.setData('cardId', card.id);
+    e.dataTransfer.setData("cardId", card.id);
     setIsDragging(true);
-  }
-
-  /**
-   * Resizes the text area to fit the contents
-   */
-  function resizeTextArea() {
-    const textArea = document.getElementById(`card-${card.id}-textarea`);
-    textArea.style.height = '';
-    textArea.style.height = `${textArea.scrollHeight + 3}px`;
   }
 }

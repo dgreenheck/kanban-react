@@ -4,7 +4,7 @@ import Board from './components/Board';
 import LoginScreen from './components/Login';
 
 function App() {
-  let [isAuthenticated, setIsAuthenticated] = useState(false);
+  let [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
     <div className="app">
