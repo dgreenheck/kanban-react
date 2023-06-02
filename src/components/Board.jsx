@@ -90,8 +90,12 @@ export default function Board() {
   function moveCard(id, targetList, targetPosition) {
     let updatedCards = [...cards];
 
+    console.log(cards);
+    
     // Move the card to the target list and update its posiiton
     const movedCard = cards.find(card => card.id === id);
+
+    console.log(movedCard);
 
     // Update the positions of the cards in the source list
     updatedCards
@@ -121,9 +125,6 @@ export default function Board() {
     movedCard.list = targetList;
     movedCard.position = targetPosition;
 
-    for (const card of cards) {
-      console.log(`${card.id} ${card.description} (${card.position})`);
-    }
     // MAKE API CALL
 
     setCards(updatedCards);

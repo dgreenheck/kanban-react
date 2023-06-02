@@ -5,25 +5,29 @@
       "id": 1,
       "description": "Card 1",
       "list": "To Do",
-      "position": 0
+      "position": 0,
+      "color": null
     },
     {
       "id": 2,
       "description": "Card 2",
       "list": "To Do",
-      "position": 1
+      "position": 1,
+      "color": null
     },
     {
       "id": 3,
       "description": "Card 3",
       "list": "In Progress",
-      "position": 0
+      "position": 0,
+      "color": null
     },
     {
       "id": 4,
       "description": "Card 4",
       "list": "Completed",
-      "position": 0
+      "position": 0,
+      "color": null
     }
   ]
 }

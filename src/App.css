@@ -128,13 +128,30 @@ body {
   width: 100%;
 }
 
+.color-palette {
+  height: 24px;
+  margin: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.color-palette-item {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 1px 1px #00000044;
+  cursor: pointer;
+}
+
 .icon {
   width: 20px;
   height: 20px;
 }
 
 .list {
-  background-color: #4950647e;
+  background-color: #efefef;
   border-radius: 16px;
   box-shadow: 0px 2px 2px #00000070;
   width: 272px;
@@ -155,7 +172,7 @@ body {
 }
 
 .list-title {
-  color: #ffffff;
+  color: #202020;
   font-size: medium;
   font-weight: 600;
   margin-top: 8px;

@@ -19,12 +19,16 @@ export default function Card({ card, isNew, isBeingDragged }) {
       card={card}
       onSave={save}
       onCancel={() => setIsEditing(false)}
+      onColorSelected={updateCardColor}
     ></EditableCard>
   ) : (
     <div
       id={`card-${card.id}`}
       className={isBeingDragged ? "card dragging" : "card"}
-      style={isDragging ? { display: "none" } : {}}
+      style={{ 
+        background: card.color,
+        display: isDragging ? "none" : "block"
+      }}
       draggable
       onDragStart={dragStart}
       onDragEnd={() => setIsDragging(false)}
@@ -33,6 +37,10 @@ export default function Card({ card, isNew, isBeingDragged }) {
       <span className="card-description">{card.description}</span>
     </div>
   );
+
+  function updateCardColor(color) {
+    card.color = color;
+  }
 
   function save() {
     const descriptionElement = document.getElementById(
