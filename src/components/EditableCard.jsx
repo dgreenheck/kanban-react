@@ -10,8 +10,9 @@ import { useState } from 'react';
  */
 export default function EditableCard({
   card,
-  onSave,
   onCancel,
+  onDelete,
+  onSave,
   onColorSelected,
 }) {
   let [color, setColor] = useState(null);
@@ -31,12 +32,12 @@ export default function EditableCard({
       ></textarea>
       <div className="color-palette">
         {[
-          "#800000A0",
-          "#804800A0",
-          "#808000A0",
-          "#008000A0",
-          "#000080A0",
-          "#600080A0",
+          "#FF8888",
+          "#FFCC88",
+          "#FFFF88",
+          "#88FF88",
+          "#8888FF",
+          "#DD99FF",
         ].map((color) => {
           return (
             <div
@@ -44,8 +45,7 @@ export default function EditableCard({
               className="color-palette-item"
               style={{
                 backgroundColor: color,
-                boxShadow:
-                  card.color === color ? "0px 0px 5px 0px white" : null,
+                border: card.color === color ? "solid 1px lightgray" : null,
               }}
               onClick={() => {
                 onColorSelected(color)
@@ -60,6 +60,9 @@ export default function EditableCard({
       </button>
       <button className="button-cancel" onClick={onCancel}>
         Cancel
+      </button>
+      <button className="button-icon" onClick={onDelete}>
+        <img className="icon" src="images/trash.png" alt="delete"></img>
       </button>
     </div>
   );

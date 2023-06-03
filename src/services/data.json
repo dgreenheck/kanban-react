@@ -1,31 +1,44 @@
 {
-  "lists": ["To Do", "In Progress", "Completed"],
+  "lists": [
+    {
+      "id": "1",
+      "name": "To Do"
+    },
+    {
+      "id": "2",
+      "name": "In Progress"
+    },
+    {
+      "id": "3",
+      "name": "Completed"
+    }
+  ],
   "cards": [
     {
-      "id": 1,
+      "id": "1",
       "description": "Card 1",
-      "list": "To Do",
+      "listId": "1",
       "position": 0,
       "color": null
     },
     {
-      "id": 2,
+      "id": "2",
       "description": "Card 2",
-      "list": "To Do",
+      "listId": "1",
       "position": 1,
       "color": null
     },
     {
-      "id": 3,
+      "id": "3",
       "description": "Card 3",
-      "list": "In Progress",
+      "listId": "2",
       "position": 0,
       "color": null
     },
     {
-      "id": 4,
+      "id": "4",
       "description": "Card 4",
-      "list": "Completed",
+      "listId": "3",
       "position": 0,
       "color": null
     }

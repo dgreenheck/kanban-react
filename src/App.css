@@ -36,12 +36,12 @@ body {
 
 .board-header {
   width: 100%;
-  background-color: #223563;
+  background-color: #2f3c5c;
   padding: 16px;
 }
 
 .button-primary {
-  background-color: #0279C0;
+  background-color: #2f3c5c;
   border: none;
   border-radius: 3px;
   box-shadow: 0px 1px 1px #00000044;
@@ -54,7 +54,7 @@ body {
 }
 
 .button-primary:hover {
-  background-color: #036aa7;
+  background-color: #445786;
 }
 
 .button-cancel {
@@ -82,21 +82,17 @@ body {
   transition: filter 0.2s ease;
 }
 
-.button-icon:hover {
-  filter: brightness(0.8);
-}
-
 .card {
-  background-color: #00000050;
+  background-color: #fefefe;
   border-radius: 8px;
-  box-shadow: 0px 2px 3px #000000A0;
-  color: rgb(238, 238, 238);
+  box-shadow: 0px 1px 2px #00000080;
+  color: black;
   cursor: pointer;
   font-size: medium;
   font-weight: 500px;
   margin-bottom: 8px;
   padding: 12px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 .card-description {
@@ -111,8 +107,8 @@ body {
   cursor: auto;
 }
 
-.card:hover {
-  background-color: #3a3a3a50;
+.card:hover:not(.editing) {
+  background-color: #8f8f8f50;
 }
 
 .card textarea {
@@ -151,7 +147,7 @@ body {
 }
 
 .list {
-  background-color: #efefef;
+  background-color: #eceef0;
   border-radius: 16px;
   box-shadow: 0px 2px 2px #00000070;
   width: 272px;
@@ -172,7 +168,7 @@ body {
 }
 
 .list-title {
-  color: #202020;
+  color: #3a3a3a;
   font-size: medium;
   font-weight: 600;
   margin-top: 8px;
@@ -203,7 +199,7 @@ body {
   margin: 4px;
   width: 272px;
 
-  background-color: #5e88bd;
+  background-color: #2f3c5c;
   border-radius: 16px;
   box-shadow: 0px 2px 5px #00000044;
   color: rgba(255, 255, 255, 0.884);
@@ -213,6 +209,12 @@ body {
   flex: none;
   align-items: center;
   justify-content: start;
+
+  transition: background-color 0.2s ease;
+}
+
+#add-list-wrapper:hover {
+  background-color: #445786;
 }
 
 #add-list-wrapper.editing {
@@ -234,7 +236,7 @@ body {
 #add-card-button {
   background: none;
   border: none;
-  color: rgb(29, 29, 29);
+  color: #1d1d1d;
   text-align: left;
   font-size: medium;
   margin-left: 4px;
@@ -245,5 +247,5 @@ body {
 }
 
 #add-card-button:hover {
-  color: rgb(235, 235, 235);
+  color: #888888;
 }

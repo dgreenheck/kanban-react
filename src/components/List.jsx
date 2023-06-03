@@ -4,10 +4,11 @@ import Card from "./Card";
 /**
  * Creates a new List component
  * @param {{
- *  list: string,
+ *  list: { id: string, name: string },
  *  cards: Array<object>,
  *  focusedCard: object,
- *  onCardCreated: () => (),
+ *  onCardCreated: (object) => (),
+ *  onCardDeleted: (object, string, number) => (),
  *  onCardMoved: (object) => (),
  *  onListDeleted: (string) => ()
  * }} params
@@ -17,16 +18,16 @@ export default function List({
   cards,
   focusedCard,
   onCardCreated,
+  onCardDeleted,
   onCardMoved,
-  onListDeleted,
+  onDelete,
 }) {
-  const listId = `list-${list}`;
   const [dragData, setDragData] = useState(null);
 
   // Get the cards in this list (sorted by position)
   let listCards = cards
     .filter((card) => {
-      return card.list === list;
+      return card.listId === list.id;
     })
     .sort((a, b) => a.position > b.position)
     .map((card) => (
@@ -36,19 +37,20 @@ export default function List({
         // If this card is the currently focused card, start it in
         // an editable state
         isNew={card.id === focusedCard?.id}
+        onDelete={onCardDeleted}
       />
     ));
 
-  // If a card is being dragged, show its silhoutte
+  // If a card is being dragged, show a translucent placeholder
   if (dragData) {
     const draggedCard = cards.find((card) => card.id === dragData.cardId);
+    console.log(dragData);
     listCards.splice(
       dragData.position,
       0,
       <Card
         key={-1}
         card={draggedCard}
-        isNew={false}
         isBeingDragged={true}
       />
     );
@@ -56,15 +58,15 @@ export default function List({
 
   return (
     <div
-      id={listId}
+      id={`list-${list.id}`}
       className="list"
       onDragOver={dragOver}
       onDrop={cardDropped}
       onDragLeave={() => setDragData(null)}
     >
       <div className="list-header">
-        <h1 className="list-title">{list}</h1>
-        <button className="button-icon" onClick={() => onListDeleted(list)}>
+        <h1 className="list-title">{list.name}</h1>
+        <button className="button-icon" onClick={deleteList}>
           <img className="icon" src="images/trash.png" alt="delete"></img>
         </button>
       </div>
@@ -74,6 +76,16 @@ export default function List({
       </button>
     </div>
   );
+  
+  /**
+   * Prompts user if they want to delete the list
+   */
+  function deleteList() {
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm(`Are you sure you want to delete the list ${list.name}?`)) {
+      onDelete(list.id)
+    }
+  }
 
   /**
    *
@@ -81,7 +93,7 @@ export default function List({
    */
   function dragOver(e) {
     setDragData({
-      cardId: Number(e.dataTransfer.getData("cardId")),
+      cardId: e.dataTransfer.getData("cardId"),
       position: calculateListPosition(e),
     });
   }
@@ -91,8 +103,8 @@ export default function List({
    * @param {DragEvent} e Drag event data
    */
   function cardDropped(e) {
-    const cardId = Number(e.dataTransfer.getData("cardId"));
-    onCardMoved(cardId, list, calculateListPosition(e));
+    const cardId = e.dataTransfer.getData("cardId");
+    onCardMoved(cardId, list.id, calculateListPosition(e));
     setDragData(null);
   }
 
@@ -104,7 +116,7 @@ export default function List({
    */
   function calculateListPosition(e) {
     // Get the DOM elements of the cards in this list
-    const listElement = document.getElementById(listId);
+    const listElement = document.getElementById(`list-${list.id}`);
     let listCards = [...listElement.children].filter((card) =>
       card.classList.contains("card")
     );

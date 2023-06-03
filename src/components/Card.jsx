@@ -10,15 +10,16 @@ import EditableCard from "./EditableCard.jsx";
  * }} param0
  * @returns
  */
-export default function Card({ card, isNew, isBeingDragged }) {
+export default function Card({ card, isNew = false, isBeingDragged = false, onDelete }) {
   let [isEditing, setIsEditing] = useState(isNew);
   let [isDragging, setIsDragging] = useState(false);
 
   return isEditing ? (
     <EditableCard
       card={card}
-      onSave={save}
       onCancel={() => setIsEditing(false)}
+      onDelete={deleteCard}
+      onSave={save}
       onColorSelected={updateCardColor}
     ></EditableCard>
   ) : (
@@ -26,7 +27,7 @@ export default function Card({ card, isNew, isBeingDragged }) {
       id={`card-${card.id}`}
       className={isBeingDragged ? "card dragging" : "card"}
       style={{ 
-        background: card.color,
+        backgroundColor: card.color,
         display: isDragging ? "none" : "block"
       }}
       draggable
@@ -40,6 +41,16 @@ export default function Card({ card, isNew, isBeingDragged }) {
 
   function updateCardColor(color) {
     card.color = color;
+  }
+
+  /**
+   * Prompts user if they want to delete the cadr
+   */
+  function deleteCard() {
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm('Are you sure you want to delete this card?')) {
+      onDelete(card);
+    }
   }
 
   function save() {
