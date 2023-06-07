@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../services/api';
+import authService from '../services/authService';
 
 export default function LoginScreen({ onSuccessfulLogin }) {
   let [username, setUsername] = useState('');
@@ -8,7 +8,7 @@ export default function LoginScreen({ onSuccessfulLogin }) {
 
   function authenticate() {
     console.log('login clicked');
-    if (api.authenticate(username, password)) {
+    if (authService.authenticate(username, password)) {
       console.log('Successful login!');
       onSuccessfulLogin();
     } else {

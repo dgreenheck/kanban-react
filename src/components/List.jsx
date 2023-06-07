@@ -20,7 +20,7 @@ export default function List({
   onCardCreated,
   onCardDeleted,
   onCardMoved,
-  onDelete,
+  onListDeleted,
 }) {
   const [dragData, setDragData] = useState(null);
 
@@ -44,7 +44,6 @@ export default function List({
   // If a card is being dragged, show a translucent placeholder
   if (dragData) {
     const draggedCard = cards.find((card) => card.id === dragData.cardId);
-    console.log(dragData);
     listCards.splice(
       dragData.position,
       0,
@@ -71,7 +70,7 @@ export default function List({
         </button>
       </div>
       {listCards}
-      <button id="add-card-button" onClick={() => onCardCreated(list)}>
+      <button id="add-card-button" onClick={() => onCardCreated(list.id)}>
         + Add card to list
       </button>
     </div>
@@ -83,7 +82,7 @@ export default function List({
   function deleteList() {
     // eslint-disable-next-line no-restricted-globals
     if(confirm(`Are you sure you want to delete the list ${list.name}?`)) {
-      onDelete(list.id)
+      onListDeleted(list.id)
     }
   }
 

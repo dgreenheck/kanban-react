@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import cardService from '../services/cardService';
 
 /**
  * Creates a new editable Card component
@@ -15,6 +16,7 @@ export default function EditableCard({
   onSave,
   onColorSelected,
 }) {
+  let [description, setDescription] = useState('');
   let [color, setColor] = useState(null);
 
   return (
@@ -26,6 +28,7 @@ export default function EditableCard({
       <textarea
         id={`card-${card.id}-textarea`}
         autoFocus={true}
+        onChange={(e) => setDescription(e.target.value)}
         onFocus={resizeTextArea}
         onInput={resizeTextArea}
         defaultValue={card.description}
@@ -55,17 +58,39 @@ export default function EditableCard({
           );
         })}
       </div>
-      <button className="button-primary" onClick={onSave}>
+      <button className="button-primary" onClick={save}>
         Save
       </button>
       <button className="button-cancel" onClick={onCancel}>
         Cancel
       </button>
-      <button className="button-icon" onClick={onDelete}>
+      <button className="button-icon" onClick={deleteCard}>
         <img className="icon" src="images/trash.png" alt="delete"></img>
       </button>
     </div>
   );
+
+  async function deleteCard() {
+    const cardId = card.id;
+
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm('Are you sure you want to delete this card?')) {
+      console.log(`EditableCard.deleteCard(${cardId})`);
+      const success = await cardService.deleteCard(cardId);
+      if (success) {
+        console.log(`EditableCard.onDelete(${cardId}`);
+        onDelete(cardId);
+      } else {
+        alert('Failed to delete card.');
+      }
+    }
+  }
+
+  async function save() {
+    card.description = description;
+    await cardService.updateCard(card.id, card);
+    onSave();
+  }
 
   /**
    * Resizes the text area to fit the contents

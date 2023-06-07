@@ -1,12 +1,13 @@
 import { useState } from "react";
-import api from "../services/api.js";
 import EditableCard from "./EditableCard.jsx";
 
 /**
  * Creates a new Card component
  * @param {{
  *  card: object,
- *  isNew: boolean
+ *  isNew: boolean,
+ *  isBeingDragged: boolean,
+ *  onDelete: (object) => ()
  * }} param0
  * @returns
  */
@@ -18,8 +19,8 @@ export default function Card({ card, isNew = false, isBeingDragged = false, onDe
     <EditableCard
       card={card}
       onCancel={() => setIsEditing(false)}
-      onDelete={deleteCard}
-      onSave={save}
+      onDelete={onDelete}
+      onSave={() => setIsEditing(false)}
       onColorSelected={updateCardColor}
     ></EditableCard>
   ) : (
@@ -41,25 +42,6 @@ export default function Card({ card, isNew = false, isBeingDragged = false, onDe
 
   function updateCardColor(color) {
     card.color = color;
-  }
-
-  /**
-   * Prompts user if they want to delete the cadr
-   */
-  function deleteCard() {
-    // eslint-disable-next-line no-restricted-globals
-    if(confirm('Are you sure you want to delete this card?')) {
-      onDelete(card);
-    }
-  }
-
-  function save() {
-    const descriptionElement = document.getElementById(
-      `card-${card.id}-textarea`
-    );
-    card.description = descriptionElement.value;
-    api.updateCard(card);
-    setIsEditing(false);
   }
 
   /**
