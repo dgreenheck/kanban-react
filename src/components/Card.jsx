@@ -5,52 +5,47 @@ import EditableCard from "./EditableCard.jsx";
  * Creates a new Card component
  * @param {{
  *  card: object,
- *  isNew: boolean,
- *  isBeingDragged: boolean,
- *  onDelete: (object) => ()
+ *  hasFocus?: boolean,
+ *  dragging?: boolean,
+ *  onDelete?: (object) => ()
  * }} param0
  * @returns
  */
-export default function Card({ card, isNew = false, isBeingDragged = false, onDelete }) {
-  let [isEditing, setIsEditing] = useState(isNew);
-  let [isDragging, setIsDragging] = useState(false);
+export default function Card({
+  card,
+  hasFocus = false,
+  placeholder = false,
+  onDelete = null,
+}) {
+  let [editing, setEditing] = useState(hasFocus);
+  let [dragging, setDragging] = useState(false);
+  
+  const dragStart = (e) => {
+    e.dataTransfer.setData("cardId", card.id);
+    setDragging(true);
+  }
 
-  return isEditing ? (
+  return editing ? (
     <EditableCard
       card={card}
-      onCancel={() => setIsEditing(false)}
+      onDoneEditing={() => setEditing(false)}
       onDelete={onDelete}
-      onSave={() => setIsEditing(false)}
-      onColorSelected={updateCardColor}
     ></EditableCard>
   ) : (
     <div
       id={`card-${card.id}`}
-      className={isBeingDragged ? "card dragging" : "card"}
-      style={{ 
+      className={dragging ? "card dragging" : "card"}
+      style={{
         backgroundColor: card.color,
-        display: isDragging ? "none" : "block"
+        display: dragging ? "none" : "block",
       }}
       draggable
       onDragStart={dragStart}
-      onDragEnd={() => setIsDragging(false)}
-      onClick={() => setIsEditing(!isEditing)}
+      onDragEnd={() => setDragging(false)}
+      onClick={() => setEditing(!editing)}
     >
       <span className="card-description">{card.description}</span>
+      <div>{card.position}</div>
     </div>
   );
-
-  function updateCardColor(color) {
-    card.color = color;
-  }
-
-  /**
-   * The user has started to drag this card
-   * @param {DragEvent} e
-   */
-  function dragStart(e) {
-    // Store the card data in the dataTransfer property of the drag event
-    e.dataTransfer.setData("cardId", card.id);
-    setIsDragging(true);
-  }
 }

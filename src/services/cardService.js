@@ -6,15 +6,6 @@ const cardsApi = axios.create({
 
 const cardService = {
   /**
-   * Gets all of the cards
-   * @returns {Promise<object[]>} An array containing all cards
-   */
-  getCards: async function() {
-    const response = await cardsApi.get()
-    return response.data;
-  },
-
-  /**
    * Creates a new card
    * @param {object} card The card object to create
    * @returns {Promise<object>} The created card object
@@ -30,7 +21,6 @@ const cardService = {
    * @returns {Promise<boolean>} True if successful
    */
   deleteCard: async function(id) {
-    console.log(`cardService.deleteCard(${id})`);
     const response = await cardsApi.delete(`${id}`);
     return (response.status === 200);
   },
@@ -42,8 +32,8 @@ const cardService = {
    * @returns {Promise<object>} The updated card
    */
   updateCard: async function(id, card) {
-    const updatedCard = await cardsApi.put(`${id}`, card)
-    return updatedCard;
+    const response = await cardsApi.put(`${id}`, card)
+    return response.data;
   }
 }
 

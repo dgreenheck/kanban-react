@@ -11,13 +11,38 @@ import cardService from '../services/cardService';
  */
 export default function EditableCard({
   card,
-  onCancel,
   onDelete,
-  onSave,
-  onColorSelected,
+  onDoneEditing
 }) {
-  let [description, setDescription] = useState('');
-  let [color, setColor] = useState(null);
+  let [description, setDescription] = useState(card.description);
+  let [color, setColor] = useState(card.color);
+
+  const saveCard = async () => {
+    card.description = description;
+    card.color = color;
+    await cardService.updateCard(card.id, card);
+    onDoneEditing();
+  }
+
+  const deleteCard = async () => {
+    // Cache the card ID
+    const cardId = card.id;
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm('Are you sure you want to delete this card?')) {
+      const success = await cardService.deleteCard(cardId);
+      if (success) {
+        onDelete(cardId);
+      } else {
+        alert('Failed to delete card.');
+      }
+    }
+  }
+
+  const resizeTextArea = () => {
+    const textArea = document.getElementById(`card-${card.id}-textarea`);
+    textArea.style.height = "";
+    textArea.style.height = `${textArea.scrollHeight + 3}px`;
+  }
 
   return (
     <div
@@ -50,18 +75,15 @@ export default function EditableCard({
                 backgroundColor: color,
                 border: card.color === color ? "solid 1px lightgray" : null,
               }}
-              onClick={() => {
-                onColorSelected(color)
-                setColor(color);
-              }}
+              onClick={() => setColor(color)}
             ></div>
           );
         })}
       </div>
-      <button className="button-primary" onClick={save}>
+      <button className="button-primary" onClick={saveCard}>
         Save
       </button>
-      <button className="button-cancel" onClick={onCancel}>
+      <button className="button-cancel" onClick={onDoneEditing}>
         Cancel
       </button>
       <button className="button-icon" onClick={deleteCard}>
@@ -69,35 +91,4 @@ export default function EditableCard({
       </button>
     </div>
   );
-
-  async function deleteCard() {
-    const cardId = card.id;
-
-    // eslint-disable-next-line no-restricted-globals
-    if(confirm('Are you sure you want to delete this card?')) {
-      console.log(`EditableCard.deleteCard(${cardId})`);
-      const success = await cardService.deleteCard(cardId);
-      if (success) {
-        console.log(`EditableCard.onDelete(${cardId}`);
-        onDelete(cardId);
-      } else {
-        alert('Failed to delete card.');
-      }
-    }
-  }
-
-  async function save() {
-    card.description = description;
-    await cardService.updateCard(card.id, card);
-    onSave();
-  }
-
-  /**
-   * Resizes the text area to fit the contents
-   */
-  function resizeTextArea() {
-    const textArea = document.getElementById(`card-${card.id}-textarea`);
-    textArea.style.height = "";
-    textArea.style.height = `${textArea.scrollHeight + 3}px`;
-  }
 }
